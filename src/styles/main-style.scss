@@ -1,0 +1,37 @@
+:root {
+    font-size: 16px;
+}
+
+html {
+    margin-top: 0;
+    padding: 0;
+}
+
+.project-container {
+    width: 80%;
+}
+
+header  {
+    margin-top: 0;
+    background-color: coral;
+}
+
+.nav-bar {
+    width: 15em;
+    height: 3em;
+    padding: 5px;
+
+    ul {
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+
+        li {
+            cursor: pointer;
+
+            &:hover {
+                color: white;
+            }
+        }
+    }
+}

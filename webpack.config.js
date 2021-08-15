@@ -4,6 +4,14 @@ module.exports = {
     mode: "development",
     entry:  "./src/index.js",
     devtool: "inline-source-map",
+    module: {
+        rules: [
+            {
+                test: /\.(scss|css)$/,
+                use: ["style-loader", "css-loader", "sass-loader"]
+            }
+        ]
+    },
     output: {
         filename: "main.js",
         path: path.resolve(__dirname, "dist")

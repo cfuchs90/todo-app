@@ -61,6 +61,39 @@ class Project extends Task {
     deleteTask = function(taskName) {
         console.log(this.taskList.filter(item => item.name != taskName));
     }
+
+    logTasks = function() {
+        console.log(this.taskList);
+    }
 }
 
-export { Project, Task };
+
+const ProjectContainer = (function() {
+    let projectList = [];
+
+    const logProjects = function() {
+        console.log(projectList);
+    }
+
+    
+    const addProject = function(newProject) {
+        projectList.push(newProject);
+    }
+
+    const deleteProject = function(projToDelete) {
+        projectList = projectList.filter(item => item.getName() != projToDelete);
+    }
+
+    const getProjects = function() {
+        return projectList;
+    }
+
+    return({
+        logProjects,
+        addProject,
+        deleteProject,
+        getProjects,
+    })
+}())
+
+export { Project, Task, ProjectContainer };
