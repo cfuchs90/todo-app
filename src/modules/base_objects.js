@@ -1,9 +1,10 @@
 class Task {
-    constructor(name, description, dueDate, priority) {
+    constructor(name, description, dueDate, priority, done = false) {
         this.name = name,
         this.description = description,
         this.dueDate = dueDate,
-        this.priority = priority
+        this.priority = priority,
+        this.done = done
     }
 
     log() {
@@ -44,6 +45,10 @@ class Task {
     getDueDate = function() {
         return this.dueDate;
     }
+
+    setDone = function() {
+        this.done = true;
+    }
 }
 
 class Project extends Task {
@@ -64,6 +69,10 @@ class Project extends Task {
 
     logTasks = function() {
         console.log(this.taskList);
+    }
+
+    deleteDoneTasks = function() {
+        this.taskList = this.taskList.filter(item => item.done == false)
     }
 }
 
@@ -87,6 +96,7 @@ const ProjectContainer = (function() {
     const getProjects = function() {
         return projectList;
     }
+
 
     return({
         logProjects,

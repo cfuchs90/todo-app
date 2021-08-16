@@ -14,15 +14,12 @@ firstProject.addTask(secondItem);
 
 secondProject.addTask(thirdItem);
 
-secondProject.log();
 
 ProjectContainer.addProject(firstProject);
 ProjectContainer.addProject(secondProject);
-ProjectContainer.logProjects();
 
-// PageDOM.log();
-// PageDOM.addProject(firstProject)
-// PageDOM.addProject(secondProject)
-// PageDOM.renderProjects();
 
 PageDOM.createNavBar(["Show Projects", "New Project"]);
+
+PageDOM.renderProjects(ProjectContainer.getProjects());
+// PageDOM.createNewProjectForm();
