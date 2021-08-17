@@ -52,8 +52,8 @@ class Task {
 }
 
 class Project extends Task {
-    constructor(name, description, priority, dueDate) {
-        super(name, description, priority, dueDate);
+    constructor(name, description, priority, dueDate, done) {
+        super(name, description, priority, dueDate, done);
     }
 
     // Array containing all the task associated with the project
@@ -73,6 +73,10 @@ class Project extends Task {
 
     deleteDoneTasks = function() {
         this.taskList = this.taskList.filter(item => item.done == false)
+    }
+
+    getTasks = function() {
+        return this.taskList;
     }
 }
 
@@ -97,12 +101,17 @@ const ProjectContainer = (function() {
         return projectList;
     }
 
+    const getProjectByName = function(searchName) {
+        return projectList.find(item => item.getName() == searchName)
+    }
+
 
     return({
         logProjects,
         addProject,
         deleteProject,
         getProjects,
+        getProjectByName,
     })
 }())
 
