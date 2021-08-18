@@ -18,11 +18,7 @@ secondProject.addTask(thirdItem);
 ProjectContainer.addProject(firstProject);
 ProjectContainer.addProject(secondProject);
 
-let bla = ProjectContainer.getProjectByName("new project2");
-console.log(bla);
 
 
 PageDOM.createNavBar(["Show Projects", "New Project"]);
-
 PageDOM.renderProjects(ProjectContainer.getProjects());
-// PageDOM.createNewProjectForm();

@@ -12,6 +12,7 @@ class Task {
         console.log(this.description);
         console.log(this.dueDate);
         console.log(this.priority);
+        console.log(this.done);
     }
 
     setName = function(newName)  {

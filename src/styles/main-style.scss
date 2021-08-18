@@ -63,3 +63,18 @@ header  {
     //     // flex-direction: column;
     // }
 }
+
+
+.project-card {
+    span {
+        font-weight: bolder;
+        font-size: 1.2em;
+        cursor: pointer;
+    }
+
+}
+
+.task-container {
+    display: none;
+
+}
