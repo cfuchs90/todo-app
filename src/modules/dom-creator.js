@@ -5,168 +5,8 @@ import "../styles/main-style.scss";
 const PageDOM = (function() {
     const rootNode = document.querySelector(".project-container");
     const headerNode = document.querySelector("header");
-
-
-    const createNavBar = function() {
-        let navBarElement = document.createElement("nav");
-        let navBarList = document.createElement("ul");
-        let linkItemShowProjects = document.createElement("li");
-        let linkItemNewProject = document.createElement("li");
-        let linkItemShowProjectsText = document.createElement("a");
-        let linkItemNewProjectText = document.createElement("a");
-
-
-        linkItemShowProjectsText.textContent = "Show Projects";
-        linkItemNewProjectText.textContent = "New Project";
-
-        linkItemShowProjects.addEventListener("click", function() {
-            renderProjects(ProjectContainer.getProjects());
-        });
-
-        linkItemNewProject.addEventListener("click", function(e) {
-            FormCreator.createNewElementForm();
-        });
-
-        linkItemShowProjects.appendChild(linkItemShowProjectsText);
-        linkItemNewProject.appendChild(linkItemNewProjectText);
-        
-        navBarList.appendChild(linkItemShowProjects);
-        navBarList.appendChild(linkItemNewProject);
-
-
-        navBarElement.appendChild(navBarList);
-        navBarElement.classList.add("nav-bar");
-
-        headerNode.appendChild(navBarElement);
-    }
-
-
-    const createCardElement = function(baseObjectElement) {
-        let isProject = baseObjectElement instanceof Project;
-
-        let card = document.createElement("div");
-        let nameHeader = document.createElement("h1");
-        let descriptionBox = document.createElement("p");
-        let dueDateElement = document.createElement("span");
-        let priorityBox = document.createElement("h1");
-        let doneCheckboxElement = document.createElement("input");
-        let doneCheckboxLabel = document.createElement("label");
-
-        nameHeader.textContent = baseObjectElement.getName();
-        descriptionBox.textContent = baseObjectElement.getDescription();
-        dueDateElement.textContent = baseObjectElement.getDueDate();
-        priorityBox.textContent = baseObjectElement.getPriority();
-
-        // Done Checkbox
-        doneCheckboxElement.setAttribute("type", "checkbox");
-        doneCheckboxElement.id = "done-" + baseObjectElement.getName();
-        doneCheckboxLabel.textContent = "Done?";
-        doneCheckboxLabel.htmlFor = doneCheckboxElement.id;
-
-        doneCheckboxElement.addEventListener("change", function(e) {
-            let localRootNode = e.target.parentNode.parentNode;
-            localRootNode.removeChild(e.target.parentNode);
-
-            if(isProject) {
-                ProjectContainer.deleteProject(baseObjectElement.getName());
-                console.log(ProjectContainer.getProjects());
-            } else {
-                baseObjectElement.setDone();
-                ProjectContainer.getProjects().forEach(projectElement => {
-                    projectElement.deleteDoneTasks();
-                })
-            }
-        });
-
-        card.appendChild(nameHeader);
-        card.appendChild(descriptionBox);
-        card.appendChild(dueDateElement);
-        card.appendChild(priorityBox);
-        card.appendChild(doneCheckboxLabel);
-        card.appendChild(doneCheckboxElement);
-
-        if(isProject) {
-            let taskContainer = document.createElement("div");
-            let taskContainerVisible = false;
-            let addTaskButton = document.createElement("button");
-            let expandTasksButton = document.createElement("span");
-
-            addTaskButton.textContent = "New Task";
-            expandTasksButton.textContent = ">";
-
-            taskContainer.classList.add("task-container");
-            taskContainer.appendChild(renderTasks(baseObjectElement.getTasks()));
-
-            addTaskButton.addEventListener("click", function(e) {
-                let currentProjectName = baseObjectElement.getName()
-                FormCreator.createNewElementForm(currentProjectName);
-            });
-
-            expandTasksButton.addEventListener("click", function(e) {
-                e.preventDefault();
-                if(!taskContainerVisible) {
-                    taskContainerVisible = true;
-                    taskContainer.style.display = "block";
-                } else {
-                    taskContainer.style.display = "none";
-                    taskContainerVisible = false;
-                }
-            })
-
-            card.appendChild(addTaskButton);
-            card.appendChild(taskContainer);
-            card.appendChild(expandTasksButton);
-            card.classList.add("project-card");
-        } else {
-            card.classList.add("task-card");
-        }
-
-        return card;
-    }
-
-
-    const logProjects = function() {
-        console.log(projectList);
-    }
-
-    const renderProjects = function(projectList) {
-        clearProjectArea();
-        projectList.forEach(function(item) {
-            let newProjectElement = createCardElement(item);
-            rootNode.appendChild(newProjectElement);
-        });
-
-    }
-
-    const renderTasks = function(taskList) {
-        let taskArea = document.createElement("div");
-
-        taskList.forEach(item => {
-            let taskElement = createCardElement(item);
-            taskArea.appendChild(taskElement);
-        })
-
-        return (taskArea);
-    }
-
-    const clearProjectArea = function() {
-        while(rootNode.firstChild) {
-            rootNode.removeChild(rootNode.firstChild);
-        }
-    }
-
-    return {
-        createCardElement,
-        createNavBar,
-        renderProjects,
-        logProjects,
-        clearProjectArea,
-    }
-})()
-
-
-const FormCreator = (function() {
     const formArea = document.querySelector(".form-area");
+
 
     const formWrapInParagraph = function(labelElement, inputElement) {
             let paragraphWrapper = document.createElement("p");
@@ -180,6 +20,9 @@ const FormCreator = (function() {
     const createNewElementForm = function(projectName = "") {
         const priorityCodes = [1, 2, 3, 4, 5];
         const projNameDefined = projectName !== "";
+        // TODO set defaultDate as default display value of dueDate Field
+        const defaultDate = new Date(Date.now()).toLocaleDateString();
+
 
         if(projNameDefined) {
             var specifier = "task"
@@ -238,6 +81,7 @@ const FormCreator = (function() {
         formLabelDescription.textContent = labelPrefix + "Description";
         formLabelDueDate.textContent = labelPrefix + "Date";
         formLabelSelect.textContent = "Priority";
+
 
         // button to add project to the projectList of the ProjectContainer
         formAddProjectButton.textContent = "Add " + labelPrefix;
@@ -306,10 +150,157 @@ const FormCreator = (function() {
     }
 
 
-    return {
-        createNewElementForm
+    const createNavBar = function() {
+        let navBarElement = document.createElement("nav");
+        let navBarList = document.createElement("ul");
+        let linkItemShowProjects = document.createElement("li");
+        let linkItemNewProject = document.createElement("li");
+        let linkItemShowProjectsText = document.createElement("a");
+        let linkItemNewProjectText = document.createElement("a");
+
+        navBarElement.classList.add("nav-bar");
+
+        linkItemShowProjectsText.textContent = "Show Projects";
+        linkItemNewProjectText.textContent = "New Project";
+
+        linkItemShowProjects.addEventListener("click", function() {
+            renderProjects(ProjectContainer.getProjects());
+        });
+
+        linkItemNewProject.addEventListener("click", function(e) {
+            createNewElementForm();
+        });
+
+        linkItemShowProjects.appendChild(linkItemShowProjectsText);
+        linkItemNewProject.appendChild(linkItemNewProjectText);
+        
+        navBarList.appendChild(linkItemShowProjects);
+        navBarList.appendChild(linkItemNewProject);
+
+        navBarElement.appendChild(navBarList);
+
+        headerNode.appendChild(navBarElement);
     }
 
-}())
+
+    const createCardElement = function(baseObjectElement) {
+        let isProject = baseObjectElement instanceof Project;
+
+        let card = document.createElement("div");
+        let nameHeader = document.createElement("h1");
+        let descriptionBox = document.createElement("p");
+        let dueDateElement = document.createElement("span");
+        let priorityBox = document.createElement("h1");
+        let doneCheckboxElement = document.createElement("input");
+        let doneCheckboxLabel = document.createElement("label");
+
+        nameHeader.textContent = baseObjectElement.getName();
+        descriptionBox.textContent = baseObjectElement.getDescription();
+        dueDateElement.textContent = baseObjectElement.getDueDate();
+        priorityBox.textContent = baseObjectElement.getPriority();
+
+        // Done Checkbox
+        doneCheckboxElement.setAttribute("type", "checkbox");
+        doneCheckboxElement.id = "done-" + baseObjectElement.getName();
+        doneCheckboxLabel.textContent = "Done?";
+        doneCheckboxLabel.htmlFor = doneCheckboxElement.id;
+
+        doneCheckboxElement.addEventListener("change", function(e) {
+            let localRootNode = e.target.parentNode.parentNode;
+            localRootNode.removeChild(e.target.parentNode);
+
+            if(isProject) {
+                ProjectContainer.deleteProject(baseObjectElement.getName());
+                console.log(ProjectContainer.getProjects());
+            } else {
+                baseObjectElement.setDone();
+                ProjectContainer.getProjects().forEach(projectElement => {
+                    projectElement.deleteDoneTasks();
+                })
+            }
+        });
+
+        card.appendChild(nameHeader);
+        card.appendChild(descriptionBox);
+        card.appendChild(dueDateElement);
+        card.appendChild(priorityBox);
+        card.appendChild(doneCheckboxLabel);
+        card.appendChild(doneCheckboxElement);
+
+        if(isProject) {
+            let taskContainer = document.createElement("div");
+            let taskContainerVisible = false;
+            let addTaskButton = document.createElement("button");
+            let expandTasksButton = document.createElement("span");
+
+            addTaskButton.textContent = "New Task";
+            expandTasksButton.textContent = ">";
+
+            taskContainer.classList.add("task-container");
+            taskContainer.appendChild(renderTasks(baseObjectElement.getTasks()));
+
+            addTaskButton.addEventListener("click", function(e) {
+                let currentProjectName = baseObjectElement.getName()
+                createNewElementForm(currentProjectName);
+            });
+
+            expandTasksButton.addEventListener("click", function(e) {
+                e.preventDefault();
+                if(!taskContainerVisible) {
+                    taskContainerVisible = true;
+                    taskContainer.style.display = "block";
+                } else {
+                    taskContainer.style.display = "none";
+                    taskContainerVisible = false;
+                }
+            })
+
+            card.appendChild(addTaskButton);
+            card.appendChild(taskContainer);
+            card.appendChild(expandTasksButton);
+            card.classList.add("project-card");
+        } else {
+            card.classList.add("task-card");
+        }
+
+        return card;
+    }
+
+
+    const renderProjects = function(projectList) {
+        clearProjectArea();
+        projectList.forEach(function(item) {
+            let newProjectElement = createCardElement(item);
+            rootNode.appendChild(newProjectElement);
+        });
+
+    }
+
+
+    const renderTasks = function(taskList) {
+        let taskArea = document.createElement("div");
+
+        taskList.forEach(item => {
+            let taskElement = createCardElement(item);
+            taskArea.appendChild(taskElement);
+        })
+
+        return (taskArea);
+    }
+
+
+    const clearProjectArea = function() {
+        while(rootNode.firstChild) {
+            rootNode.removeChild(rootNode.firstChild);
+        }
+    }
+
+
+    return {
+        createNavBar,
+        renderProjects,
+    }
+})()
+
 
 export  { PageDOM };
