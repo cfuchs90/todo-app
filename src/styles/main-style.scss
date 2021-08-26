@@ -66,10 +66,35 @@ header  {
 
 
 .project-card {
-    span {
+
+    position: relative;
+    border: 1px solid black;
+    margin-bottom: .5em;
+    margin-top: .5em;
+    margin-left: 1em;
+    padding: .7em;
+
+    h1 {
+        font-size: 2em;
+        margin: 0;
+    }
+
+    p {
+        font-size: 1em;
+    }
+
+    .down-arrow {
+        position: absolute;
+        // left: 5em;
+        left: 24em;
+        bottom: 4.8em;
         font-weight: bolder;
-        font-size: 1.2em;
+        font-size: 2em;
         cursor: pointer;
+    }
+
+    button {
+        float: right;
     }
 
 }
@@ -77,4 +102,8 @@ header  {
 .task-container {
     display: none;
 
+}
+
+.task-card {
+    border: 1px solid orangered;
 }

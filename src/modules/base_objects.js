@@ -1,5 +1,5 @@
 class Task {
-    constructor(name, description, dueDate, priority, done = false) {
+    constructor(name, description, priority, dueDate, done = false) {
         this.name = name,
         this.description = description,
         this.dueDate = dueDate,
@@ -52,6 +52,7 @@ class Task {
     }
 }
 
+
 class Project extends Task {
     constructor(name, description, priority, dueDate, done) {
         super(name, description, priority, dueDate, done);
@@ -85,6 +86,7 @@ class Project extends Task {
 const ProjectContainer = (function() {
     let projectList = [];
 
+
     const logProjects = function() {
         console.log(projectList);
     }
@@ -94,16 +96,45 @@ const ProjectContainer = (function() {
         projectList.push(newProject);
     }
 
+
     const deleteProject = function(projToDelete) {
         projectList = projectList.filter(item => item.getName() != projToDelete);
     }
+
 
     const getProjects = function() {
         return projectList;
     }
 
+
     const getProjectByName = function(searchName) {
         return projectList.find(item => item.getName() == searchName)
+    }
+
+
+    const saveProjects = function() {
+        console.log(JSON.stringify(projectList));
+    }
+
+    
+    const loadProjects = function() {
+        fetch("http://localhost:3000/getprojects")
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(projectItem => {
+                let newLoadedProject = new Project(projectItem.name, projectItem.description, projectItem.priority, projectItem.dueDate, projectItem.done);
+
+                projectItem.taskList.forEach(taskItem =>{
+                    let newLoadedTask = new Task(taskItem.name, taskItem.description, taskItem.priority, taskItem.dueDate, taskItem.done);
+                    newLoadedProject.addTask(newLoadedTask);
+                });
+
+                ProjectContainer.addProject(newLoadedProject);
+                // console.log();
+                // console.log(projectItem.taskList);
+            })
+        });
+        
     }
 
 
@@ -113,6 +144,8 @@ const ProjectContainer = (function() {
         deleteProject,
         getProjects,
         getProjectByName,
+        saveProjects,
+        loadProjects
     })
 }())
 

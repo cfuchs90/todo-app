@@ -160,7 +160,11 @@ const PageDOM = (function() {
 
         navBarElement.classList.add("nav-bar");
 
-        linkItemShowProjectsText.textContent = "Show Projects";
+        if(ProjectContainer.getProjects().length) {
+            linkItemShowProjectsText.textContent = "Show Projects";
+        } else {
+            linkItemShowProjectsText.textContent = "Load Projects";
+        }
         linkItemNewProjectText.textContent = "New Project";
 
         linkItemShowProjects.addEventListener("click", function() {
@@ -190,7 +194,7 @@ const PageDOM = (function() {
         let nameHeader = document.createElement("h1");
         let descriptionBox = document.createElement("p");
         let dueDateElement = document.createElement("span");
-        let priorityBox = document.createElement("h1");
+        let priorityBox = document.createElement("p");
         let doneCheckboxElement = document.createElement("input");
         let doneCheckboxLabel = document.createElement("label");
 
@@ -204,6 +208,7 @@ const PageDOM = (function() {
         doneCheckboxElement.id = "done-" + baseObjectElement.getName();
         doneCheckboxLabel.textContent = "Done?";
         doneCheckboxLabel.htmlFor = doneCheckboxElement.id;
+
 
         doneCheckboxElement.addEventListener("change", function(e) {
             let localRootNode = e.target.parentNode.parentNode;
@@ -220,6 +225,8 @@ const PageDOM = (function() {
             }
         });
 
+        // priorityBox.classList.add("priority");
+
         card.appendChild(nameHeader);
         card.appendChild(descriptionBox);
         card.appendChild(dueDateElement);
@@ -233,7 +240,7 @@ const PageDOM = (function() {
             let addTaskButton = document.createElement("button");
             let expandTasksButton = document.createElement("span");
 
-            addTaskButton.textContent = "New Task";
+            addTaskButton.textContent = "Add Task";
             expandTasksButton.textContent = ">";
 
             taskContainer.classList.add("task-container");
@@ -254,6 +261,8 @@ const PageDOM = (function() {
                     taskContainerVisible = false;
                 }
             })
+
+            expandTasksButton.classList.add("down-arrow");
 
             card.appendChild(addTaskButton);
             card.appendChild(taskContainer);
